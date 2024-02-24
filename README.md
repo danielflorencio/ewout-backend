@@ -34,6 +34,13 @@
 $ npm install
 ```
 
+## Environment Variables
+
+Create a .env file with the following properties: 
+
+- 
+
+
 ## Running the app
 
 ```bash
@@ -105,6 +112,14 @@ Nest is [MIT licensed](LICENSE).
 
 
 # Prisma Commands
+
+- For installing prisma as a dev dependency: 
+
+```npm i prisma -D```
+
+- For creating the prisma folder in your project:
+
+```npx prisma init```
 
 - For starting the database from your first schema:
 

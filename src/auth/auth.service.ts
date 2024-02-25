@@ -5,18 +5,25 @@ import { UsersService } from 'src/users/users.service';
 import { UserType } from 'src/users/types/user';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign-in.dto';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class AuthService {
 
   constructor(
-    private usersService: UsersService,
+    // private usersService: UsersService,
+    private readonly databaseService: DatabaseService,
     private jwtService: JwtService
   ) {}
 
     
   async signIn({email, password}: SignInDto): Promise<{ access_token: string }> {
-    const user: UserType = await this.usersService.findOneByEmail(email);
+    // const user: UserType = await this.usersService.findOneByEmail(email);
+    const user: UserType = await this.databaseService.user.findUnique({
+      where: {
+        email
+      }
+    }) as UserType;
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }

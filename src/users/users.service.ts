@@ -6,28 +6,40 @@ import { SafeUserSelect, SafeUserType, UserType } from './types/user';
 import { UserRoleType } from './types/roles';
 import { dummyUsersData } from './data/dummyUsersData';
 import { DatabaseService } from 'src/database/database.service';
+import { ConflictException } from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+
 
 @Injectable()
 export class UsersService {
-    private users: UserType[] = dummyUsersData;
+    // private users: UserType[] = dummyUsersData;
 
     constructor(private readonly databaseService: DatabaseService) { }
 
 
-    findAll(role?: UserRoleType) {
+    async findAll(role?: UserRoleType): Promise<SafeUserType[]> {
+
+        let users: SafeUserType[] | Promise<SafeUserType[]> = [];
+
         if (role) {
-            const users = this.databaseService.user.findMany({
+            users = await this.databaseService.user.findMany({
                 select: SafeUserSelect,
                 where: {
                     role: role
                 }
-            })
-            if(!users){
-                throw new NotFoundException(`No users with role ${role} found`);
-            } 
+            }) as SafeUserType[]
+        } else {
+            users = this.databaseService.user.findMany({
+                select: SafeUserSelect
+            }) as Promise<SafeUserType[]>
+        }
+
+        if(!users){
+            throw new NotFoundException(`No users found.`);
+        } else {
             return users;
         }
-        return this.databaseService.user.findMany();
+
     }
 
     findOneById(id: number) {
@@ -42,28 +54,38 @@ export class UsersService {
     }
 
     create(createUserDto: CreateUserDto) {
-        this.databaseService.user.create({
-            data: createUserDto
-        })
-    }
-
-    update(id: number, updateUserDto: UpdateUserDto) {
-        this.users = this.users.map(user => {
-            if (user.id === id) {
-                return { ...user, ...updateUserDto }
+        let newUser;
+        try{
+            newUser = this.databaseService.user.create({
+                data: createUserDto
+            })
+        } catch(error){
+            if (error instanceof PrismaClientKnownRequestError) {
+                if (error.code === 'P2002') {
+                  throw new ConflictException('User with this email already exists');
+                }
             }
-            return user
-        })
-
-        return this.findOneById(id)
+        }
+        return newUser
     }
 
-    delete(id: number) {
-        const removedUser = this.findOneById(id)
+    // update(id: number, updateUserDto: UpdateUserDto) {
+    //     this.users = this.users.map(user => {
+    //         if (user.id === id) {
+    //             return { ...user, ...updateUserDto }
+    //         }
+    //         return user
+    //     })
 
-        this.users = this.users.filter(user => user.id !== id)
+    //     return this.findOneById(id)
+    // }
 
-        return removedUser
-    }
+    // delete(id: number) {
+    //     const removedUser = this.findOneById(id)
+
+    //     this.users = this.users.filter(user => user.id !== id)
+
+    //     return removedUser
+    // }
 
 }

@@ -2,10 +2,12 @@ import { UserRoleType } from "./roles"
 
 export type UserType = {
     id: number,
-    firstName: string,
-    lastName: string,
+    firstName?: string,
+    lastName?: string,
     email: string,
-    password: string,
+    password?: string,
+    createdAt?: Date | string,
+    updatedAt?: Date | string, 
     role: UserRoleType
 }
 

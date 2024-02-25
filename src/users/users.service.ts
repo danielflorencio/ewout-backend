@@ -19,12 +19,19 @@ export class UsersService {
         return this.users
     }
 
-    findOne(id: number) {
+    findOneById(id: number) {
         const user = this.users.find(user => user.id === id)
 
         if (!user) throw new NotFoundException('User Not Found')
+        // Do it using the user repository;
 
         return user
+    }
+
+    findOneByEmail(email: string) {
+        const user = this.users.find(user => user.email === email)
+        // Do it using the user repository;
+        return user;
     }
 
     create(createUserDto: CreateUserDto) {
@@ -45,11 +52,11 @@ export class UsersService {
             return user
         })
 
-        return this.findOne(id)
+        return this.findOneById(id)
     }
 
     delete(id: number) {
-        const removedUser = this.findOne(id)
+        const removedUser = this.findOneById(id)
 
         this.users = this.users.filter(user => user.id !== id)
 

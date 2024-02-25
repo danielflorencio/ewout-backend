@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, isNotEmpty, isString, isStrongPassword } from "class-validator";
 import { UserRoleType, UserRolesArray } from "../types/roles";
 
 export class CreateUserDto {
@@ -12,6 +12,10 @@ export class CreateUserDto {
 
     @IsEmail()
     email: string;
+
+    // @isString()
+    // @isNotEmpty()
+    password: string;
 
     @IsEnum(UserRolesArray, {
         message: 'Valid role required'

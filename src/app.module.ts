@@ -8,6 +8,9 @@ import { APP_GUARD } from '@nestjs/core'
 import { MyLoggerModule } from './my-logger/my-logger.module';
 import { WorkoutModule } from './workout/workout.module';
 import { ExerciseModule } from './exercise/exercise.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/auth.guard';
+// import { APP_THROTTLER } from '@nestjs/core/constants';
 
 @Module({
   imports: [
@@ -24,12 +27,19 @@ import { ExerciseModule } from './exercise/exercise.module';
     }]),
     MyLoggerModule,
     WorkoutModule,
-    ExerciseModule
+    ExerciseModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_GUARD, 
-    useClass: ThrottlerGuard,
-  }],
+  providers: [AppService, 
+    {
+      provide: APP_GUARD, 
+      useClass: ThrottlerGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    }
+  ],
 })
 export class AppModule {}

@@ -9,10 +9,8 @@ import { DatabaseService } from 'src/database/database.service';
 import { ConflictException } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-
 @Injectable()
 export class UsersService {
-    // private users: UserType[] = dummyUsersData;
 
     constructor(private readonly databaseService: DatabaseService) { }
 

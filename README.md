@@ -40,7 +40,6 @@ This is a fitness application project using TypeScript, Nestjs, prisma ORM and p
 - Finish the database configurations and migrations creation;
 - Implement refresh tokens in the authentication;
 - CSRF protection (https://docs.nestjs.com/security/csrf);
-- Helmet (https://docs.nestjs.com/security/helmet);
 - Verify logging configuration.
 
 ## Installation

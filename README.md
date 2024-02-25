@@ -52,8 +52,9 @@ $ npm install
 
 Create a .env file with the following properties: 
 
-- 
-
+DATABASE_URL="postgresql://yourPostgresUser:password@localhost:5432/db-name"
+DIRECT_URL="postgresql://yourPostgresUser:password@localhost:5432/db-name"
+JWT_SECRET="yourSecretKey"
 
 ## Running the app
 

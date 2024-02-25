@@ -8,3 +8,15 @@ export type UserType = {
     password: string,
     role: UserRoleType
 }
+
+export type SafeUserType = Omit<UserType, 'password'>
+
+export const SafeUserSelect = {
+    id: true,
+    email: true, 
+    role: true,
+    firstName: true,
+    lastName: true,
+    createdAt: true,
+    updatedAt: true
+}

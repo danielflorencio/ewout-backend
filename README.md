@@ -32,6 +32,7 @@ This is a fitness application project using TypeScript, Nestjs, prisma ORM and p
 
 - Authentication.
 - Rate limiting.
+- Enable CORS.
 
 ## Todo list
 
@@ -131,6 +132,10 @@ Nest is [MIT licensed](LICENSE).
 - For installing prisma as a dev dependency: 
 
 ```npm i prisma -D```
+
+- For generating the first database: 
+
+```npx prisma migrate dev```
 
 - For creating the prisma folder in your project:
 

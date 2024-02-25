@@ -14,6 +14,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
+    
   async signIn({email, password}: SignInDto): Promise<{ access_token: string }> {
     const user: UserType = await this.usersService.findOneByEmail(email);
     if (user?.password !== password) {

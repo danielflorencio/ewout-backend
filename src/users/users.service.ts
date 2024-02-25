@@ -2,46 +2,49 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
-import { UserType } from './types/user';
+import { SafeUserSelect, SafeUserType, UserType } from './types/user';
 import { UserRoleType } from './types/roles';
 import { dummyUsersData } from './data/dummyUsersData';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class UsersService {
     private users: UserType[] = dummyUsersData;
 
+    constructor(private readonly databaseService: DatabaseService) { }
+
+
     findAll(role?: UserRoleType) {
         if (role) {
-            const rolesArray = this.users.filter(user => user.role === role)
-            if (rolesArray.length === 0) throw new NotFoundException('User Role Not Found')
-            return rolesArray
+            const users = this.databaseService.user.findMany({
+                select: SafeUserSelect,
+                where: {
+                    role: role
+                }
+            })
+            if(!users){
+                throw new NotFoundException(`No users with role ${role} found`);
+            } 
+            return users;
         }
-        return this.users
+        return this.databaseService.user.findMany();
     }
 
     findOneById(id: number) {
-        const user = this.users.find(user => user.id === id)
-
+        const user = this.databaseService.user.findUnique({ where: { id } })
         if (!user) throw new NotFoundException('User Not Found')
-        // Do it using the user repository;
-
         return user
     }
 
     findOneByEmail(email: string) {
-        const user = this.users.find(user => user.email === email)
-        // Do it using the user repository;
+        const user = this.databaseService.user.findUnique({ where: { email } })
         return user;
     }
 
     create(createUserDto: CreateUserDto) {
-        const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id)
-        const newUser = {
-            id: usersByHighestId[0].id + 1,
-            ...createUserDto
-        }
-        this.users.push(newUser)
-        return newUser
+        this.databaseService.user.create({
+            data: createUserDto
+        })
     }
 
     update(id: number, updateUserDto: UpdateUserDto) {

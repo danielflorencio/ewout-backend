@@ -13,8 +13,6 @@ export class CreateUserDto {
     @IsEmail()
     email: string;
 
-    // @isString()
-    // @isNotEmpty()
     password: string;
 
     @IsEnum(UserRolesArray, {

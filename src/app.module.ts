@@ -10,7 +10,6 @@ import { WorkoutModule } from './workout/workout.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/auth.guard';
-// import { APP_THROTTLER } from '@nestjs/core/constants';
 
 @Module({
   imports: [

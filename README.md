@@ -26,7 +26,21 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a fitness application project using TypeScript, Nestjs, prisma ORM and postgresql as it's database.
+
+## Complete features 
+
+- Authentication.
+- Rate limiting.
+
+## Todo list
+
+- Encryption and hashing (https://docs.nestjs.com/security/encryption-and-hashing);
+- Finish the database configurations and migrations creation;
+- Implement refresh tokens in the authentication;
+- CSRF protection (https://docs.nestjs.com/security/csrf);
+- Helmet (https://docs.nestjs.com/security/helmet);
+- Verify logging configuration.
 
 ## Installation
 
@@ -132,3 +146,5 @@ Nest is [MIT licensed](LICENSE).
 
 ---- A question I have: in the video tutorial he is importing just a single DatabaseModule for every single service... 
 ---- But shouldn't i have a DatabaseModule (or a repository) for each entity?
+
+

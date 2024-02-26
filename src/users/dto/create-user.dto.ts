@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, isNotEmpty, isString, isStrongPassword } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
 import { UserRoleType, UserRolesArray } from "../types/roles";
 
 export class CreateUserDto {
@@ -13,6 +13,15 @@ export class CreateUserDto {
     @IsEmail()
     email: string;
 
+    @IsString()
+    @IsNotEmpty()
+    @IsStrongPassword({
+        minLength: 8,
+        minUppercase: 0,
+        minNumbers: 0,
+        minSymbols: 0,
+        minLowercase: 0
+    })
     password: string;
 
     @IsEnum(UserRolesArray, {

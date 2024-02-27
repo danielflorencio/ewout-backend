@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
-import { SafeUserSelect, SafeUserType, UserType } from './types/user';
+import { SafeUserSelect, SafeUserType } from './types/user';
 import { UserRoleType } from './types/roles';
-import { dummyUsersData } from './data/dummyUsersData';
 import { DatabaseService } from 'src/database/database.service';
 import { ConflictException } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
 
     constructor(private readonly databaseService: DatabaseService) { }
-
 
     async findAll(role?: UserRoleType): Promise<SafeUserType[]> {
 
@@ -51,39 +49,23 @@ export class UsersService {
         return user;
     }
 
-    create(createUserDto: CreateUserDto) {
+
+    async create(createUserDto: CreateUserDto) {
         let newUser;
         try{
+            const salt = await genSalt();
+            const hashedPassword = await hash(createUserDto.password, salt);
             newUser = this.databaseService.user.create({
-                data: createUserDto
+                data: {...createUserDto, password: hashedPassword}
             })
         } catch(error){
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
-                  throw new ConflictException('User with this email already exists');
+                  throw new ConflictException('A user with this email already exists');
                 }
             }
         }
         return newUser
     }
-
-    // update(id: number, updateUserDto: UpdateUserDto) {
-    //     this.users = this.users.map(user => {
-    //         if (user.id === id) {
-    //             return { ...user, ...updateUserDto }
-    //         }
-    //         return user
-    //     })
-
-    //     return this.findOneById(id)
-    // }
-
-    // delete(id: number) {
-    //     const removedUser = this.findOneById(id)
-
-    //     this.users = this.users.filter(user => user.id !== id)
-
-    //     return removedUser
-    // }
 
 }

@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Request } from '@nestjs/common';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class ExerciseService {
-  create(createExerciseDto: CreateExerciseDto) {
+
+  constructor(
+    private readonly databaseService: DatabaseService
+  ){}
+
+  create(createExerciseDto: CreateExerciseDto, userEmail: string) {
     return 'This action adds a new exercise';
   }
 

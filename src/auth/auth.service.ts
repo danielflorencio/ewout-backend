@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UserType } from 'src/users/types/user';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign-in.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { compare } from 'bcrypt';
@@ -14,8 +14,6 @@ export class AuthService {
     private readonly databaseService: DatabaseService,
     private jwtService: JwtService
   ) {}
-
-
     
   async signIn({email, password}: SignInDto): Promise<{ access_token: string }> {
 
@@ -32,8 +30,13 @@ export class AuthService {
     }
 
     const payload = { sub: user.id, userEmail: user.email };
+
+    // Update the options to include the desired expiration time
+    const expiresIn = '1d'; // Set the expiration time to 1 day
+    const options: JwtSignOptions = { expiresIn };
+
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, options),
     };
 
   }
